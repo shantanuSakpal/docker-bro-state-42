@@ -2,17 +2,14 @@
 import React, { useEffect, useState } from "react";
 import CardDataStats from "../CardDataStats";
 import LineChart from "../Charts/NewLineChart";
-import { cpuUsage } from "process"; import Link from "next/link";
-
-
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const ECommerce: React.FC = () => {
-
-  //get current url
-  const url = window.location.href;
-  //last part of the url
-  const containerId = url.split('/').pop();
-  console.log(containerId);
+  const currentPage = usePathname();
+  const url = currentPage;
+  const containerId = url.split("/").pop();
+  // console.log(containerId);
   const [dynamicData, setDynamicData] = useState<any>({
     timeStamp: [],
     cpu_usage: [],
@@ -25,7 +22,6 @@ const ECommerce: React.FC = () => {
     memory_usage_bytes: 0,
     memory_limit_bytes: 0,
   });
-
 
   useEffect(() => {
     (async () => {
@@ -222,10 +218,16 @@ const ECommerce: React.FC = () => {
 
   return (
     <>
-      <div className="mt-4 flex flex-col">
+      <div className="relative mt-4 flex flex-col">
         <div>
           <h1 className="mb-2 text-2xl font-semibold">Container Stats</h1>
         </div>
+        <Link
+          href={`/logs/${containerId}`}
+          className="absolute -top-5 right-10 rounded bg-graydark px-5 py-2"
+        >
+          Logs
+        </Link>
         {/* Charts */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
           {/* CPU Used */}

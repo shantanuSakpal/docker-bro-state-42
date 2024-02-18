@@ -229,7 +229,7 @@ export const getContainerLogsTwo = async (req: Request, res: Response) => {
 	const containerId = req.query.containerId as string;
 	// const containerId = "957960d65b3571d08fb3c5648fcb197fc70f8e7a6b1445fa7ae0f60c2c46fc29";
 	try {
-		const dockerApiUrl = `http://localhost:8099/containers/${containerId}/logs?stdout=true&follow=true`;
+		const dockerApiUrl = `http://localhost:8099/containers/${containerId}/logs?stdout=true&stderr=true&follow=true&tail=10&since=0`;
 
 		const response = await fetch(dockerApiUrl, {
 			method: "GET",
@@ -273,7 +273,7 @@ export const getContainerLogs = async (req: Request, res: Response) => {
 	const containerId = req.query.containerId as string;
 	// containerId = "957960d65b3571d08fb3c5648fcb197fc70f8e7a6b1445fa7ae0f60c2c46fc29";
 	try {
-		const dockerApiUrl = `http://localhost:8099/containers/${containerId}/logs`;
+		const dockerApiUrl = `http://localhost:8099/containers/${containerId}/logs?stderr=true&stdout=true&follow=true&tail=10&since=0`;
 		const response = await fetch(dockerApiUrl, {
 			method: "GET",
 			headers: {
