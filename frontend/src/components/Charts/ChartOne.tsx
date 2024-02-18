@@ -2,8 +2,6 @@ import { ApexOptions } from "apexcharts";
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
-
-
 interface ChartOneState {
   series: {
     name: string;
@@ -14,16 +12,12 @@ interface ChartOneState {
 interface IProps {
   timeArr: String[];
   dataArr: number[];
-
 }
 
-const ChartOne: React.FC<IProps> = ({ timeArr, dataArr }: IProps) => {
+const ChartOne: React.FC<IProps> = ({timeArr,dataArr}) => {
 
-  useEffect(() => {
-
-  }, [])
-
-
+  console.log(dataArr);
+  
   const options: ApexOptions = {
     legend: {
       show: false,
@@ -129,7 +123,7 @@ const ChartOne: React.FC<IProps> = ({ timeArr, dataArr }: IProps) => {
       {
         name: "Cpu Usage",
         data: dataArr,
-      }
+      },
     ],
   });
 
@@ -150,12 +144,12 @@ const ChartOne: React.FC<IProps> = ({ timeArr, dataArr }: IProps) => {
             </span>
             <div className="w-full">
               <p className="font-semibold text-primary">CPU usage</p>
-              <p className="text-sm font-medium">{
+              {/* <p className="text-sm font-medium">{
                 timeArr[0]
               } - {
                   timeArr[timeArr.length - 1]
 
-                }</p>
+                }</p> */}
             </div>
           </div>
         </div>
