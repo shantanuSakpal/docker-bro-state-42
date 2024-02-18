@@ -50,24 +50,43 @@ export default function Home() {
         console.log(result.text);
     }
 
+    let errorList = [
+
+    ];
+
+    if (localStorage.getItem("errorList") == null) {
+        errorList = [
+            {
+                id: 1,
+                title: "Internet connection error",
+                description: "$ docker logs <container_id>\n    [2024-02-17T10:00:00Z] INFO: Starting container...\n    [2024-02-17T10:00:05Z] INFO: Container started successfully.\n    [2024-02-17T10:01:00Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:05Z] WARNING: DNS resolution failed. Trying again...\n    [2024-02-17T10:01:10Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:15Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:20Z] WARNING: Retrying connection to example.com...\n    [2024-02-17T10:01:25Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:30Z] ERROR: Internet connection not available. Exiting container.\n    [2024-02-17T10:01:30Z] INFO: Container exiting...\n    ",
+            },
+            {
+                id: 2,
+                title: "Cpu usage high",
+                description: "[Container] 2023-02-18T03:15:17.12345Z WARNING High CPU usage detected  \n            [Container] 2023-02-18T03:15:22.12345Z WARNING CPU usage over 90% \n            [Host] 2023-02-18T03:15:27.12345Z WARNING Container 234a53fd exceeded CPU limit, shutting it down \n            [Container] 2023-02-18T03:15:28.12345Z ERROR Received SIGTERM, shutting down \n            [Container] 2023-02-18T03:15:30.12345Z ERROR Connection failure to database, cannot save state  \n            [Container] 2023-02-18T03:15:31.12345Z WARNING Forcibly stopping container \n            [Host] 2023-02-18T03:15:32.12345Z WARNING Stopped container 234a53fd \n",
+            },
+        ]
+
+    }
+    else {
+        errorList = JSON.parse(localStorage.getItem("errorList") || "");
+    }
 
 
-    const demoLogs: string = "$ docker logs <container_id>\n    [2024-02-17T10:00:00Z] INFO: Starting container...\n    [2024-02-17T10:00:05Z] INFO: Container started successfully.\n    [2024-02-17T10:01:00Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:05Z] WARNING: DNS resolution failed. Trying again...\n    [2024-02-17T10:01:10Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:15Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:20Z] WARNING: Retrying connection to example.com...\n    [2024-02-17T10:01:25Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:30Z] ERROR: Internet connection not available. Exiting container.\n    [2024-02-17T10:01:30Z] INFO: Container exiting...\n    ";
+    let demoLogs: string | any = "";
+    if (localStorage.getItem("demoLogs") == null) {
+        demoLogs = "demoLogs", "$ docker logs <container_id>\n    [2024-02-17T10:00:00Z] INFO: Starting container...\n    [2024-02-17T10:00:05Z] INFO: Container started successfully.\n    [2024-02-17T10:01:00Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:05Z] WARNING: DNS resolution failed. Trying again...\n    [2024-02-17T10:01:10Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:15Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:20Z] WARNING: Retrying connection to example.com...\n    [2024-02-17T10:01:25Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:30Z] ERROR: Internet connection not available. Exiting container.\n    [2024-02-17T10:01:30Z] INFO: Container exiting...\n";
+        localStorage.setItem("demoLogs", demoLogs);
+    }
+    else {
+        demoLogs = localStorage.getItem("demoLogs");
+    }
+
+
 
     const containerName: string = "my-container";
 
-    const errorList = [
-        {
-            id: 1,
-            title: "Internet connection error",
-            description: "$ docker logs <container_id>\n    [2024-02-17T10:00:00Z] INFO: Starting container...\n    [2024-02-17T10:00:05Z] INFO: Container started successfully.\n    [2024-02-17T10:01:00Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:05Z] WARNING: DNS resolution failed. Trying again...\n    [2024-02-17T10:01:10Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:15Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:20Z] WARNING: Retrying connection to example.com...\n    [2024-02-17T10:01:25Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:30Z] ERROR: Internet connection not available. Exiting container.\n    [2024-02-17T10:01:30Z] INFO: Container exiting...\n    ",
-        },
-        {
-            id: 2,
-            title: "Cpu usage high",
-            description: "[Container] 2023-02-18T03:15:17.12345Z WARNING High CPU usage detected  \n            [Container] 2023-02-18T03:15:22.12345Z WARNING CPU usage over 90% \n            [Host] 2023-02-18T03:15:27.12345Z WARNING Container 234a53fd exceeded CPU limit, shutting it down \n            [Container] 2023-02-18T03:15:28.12345Z ERROR Received SIGTERM, shutting down \n            [Container] 2023-02-18T03:15:30.12345Z ERROR Connection failure to database, cannot save state  \n            [Container] 2023-02-18T03:15:31.12345Z WARNING Forcibly stopping container \n            [Host] 2023-02-18T03:15:32.12345Z WARNING Stopped container 234a53fd \n",
-        },
-    ];
 
 
 
