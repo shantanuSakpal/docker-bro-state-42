@@ -7,9 +7,9 @@ import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
 export const metadata: Metadata = {
-  title: "Monitor",
+  title: "DockerWeb",
   description:
-    "This is Next.js Tables page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
+    "This is Next.js Tables page for DockerWeb - Next.js Tailwind CSS Admin Dashboard Template",
 };
 
 const TablesPage = () => {
@@ -19,7 +19,7 @@ const TablesPage = () => {
 
       <div className="flex flex-col gap-10">
         <TableOne />
-        
+
       </div>
     </DefaultLayout>
   );

@@ -1,9 +1,17 @@
 "use client";
 import React, { useState } from "react";
 import ChartOne from "../Charts/ChartOne";
+import Link from "next/link";
+
 
 
 const ECommerce: React.FC = () => {
+
+  //get current url
+  const url = window.location.href;
+  //last part of the url
+  const containerId = url.split('/').pop();
+  console.log(containerId);
 
   const [timeArr, setTimeArr] = useState<string[]>([
     '17:10:31',
@@ -127,17 +135,18 @@ const ECommerce: React.FC = () => {
     <>
 
 
-      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <div className="">
-          <ChartOne
-            timeArr={timeArr}
-            dataArr={dataArr}
-          />
-          <ChartOne
-            timeArr={timeArr}
-            dataArr={dataArr}
-          />
-        </div>
+      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5 relative">
+        <Link className="absolute right-10 px-5 py-3 rounded-lg text-white bg-strokedark border border-boxdark hover:bg-boxdark" href={`/logs/${containerId}`}>
+          Logs
+        </Link>
+        <ChartOne
+          timeArr={timeArr}
+          dataArr={dataArr}
+        />
+        <ChartOne
+          timeArr={timeArr}
+          dataArr={dataArr}
+        />
 
       </div>
     </>
