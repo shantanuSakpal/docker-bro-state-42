@@ -64,7 +64,7 @@ const TableOne = () => {
       // console.log(data);
       setSystemData(data);
     })();
-  }, []);
+  });
 
   useEffect(() => {
     (async () => {
