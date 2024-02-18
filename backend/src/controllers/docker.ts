@@ -41,8 +41,19 @@ export const getSystemInfo = async (req: Request, res: Response) => {
 
 		const data = await response.json();
 
+		const formattedData = {
+			containers: data.Containers,
+			containersRunning: data.ContainersRunning,
+			images: data.Images,
+			driver: data.Driver,
+			memory: data.MemTotal,
+			operatingSystem: data.OperatingSystem,
+			architecture: data.Architecture,
+			serverVersion: data.ServerVersion,
+		};
+
 		//Format Data
-		res.json(data);
+		res.json(formattedData);
 	} catch (error: any) {
 		console.error("Error:", error);
 		res.status(500).json({ error: error.message });
@@ -93,10 +104,22 @@ export const inspectContainer = async (req: Request, res: Response) => {
 
 		const data = await response.json();
 
+		//Format Data
+		const output = {
+			id: data.Id,
+			name: data.Name,
+			image: data.Config.Image,
+			status: data.State.Status,
+			created: data.Created,
+			ports: data.NetworkSettings.Ports,
+			labels: data.Config.Labels,
+			environment: data.Config.Env,
+		};
+
 		console.log(data);
 
 		//Format Data
-		res.json(data);
+		res.json(output);
 	} catch (error: any) {
 		console.error("Error:", error);
 		res.status(500).json({ error: error.message });

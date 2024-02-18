@@ -232,7 +232,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               }`}
                               key={index} // Add a unique key prop for each mapped element
                             >
-                              <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
+                              <ul className=" mt-2 flex flex-col gap-2.5 pl-6">
                                 <li>
                                   <Link
                                     href={`/stats/${container.id}`}
