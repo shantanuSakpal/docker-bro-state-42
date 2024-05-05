@@ -65,6 +65,7 @@ const ECommerce: React.FC = () => {
         // console.log(data);
         let date = new Date(timeStamp);
         let readableDate = date.toLocaleTimeString();
+
         // let readableDate = date.toLocaleString();
         setDynamicData((prev: any) => {
           return {

@@ -1,5 +1,16 @@
 // import axios from "axios";
 import { Request, Response } from "express";
+import {Kafka} from "kafkajs"
+
+
+const kafka = new Kafka({
+  clientId: 'my-app',
+  brokers: ['localhost:9092'], // Add all Kafka broker addresses here
+});
+
+const producer = kafka.producer()
+const consumer = kafka.consumer({ groupId: 'test-group' })
+
 
 export const createContainerHandler = async (req: Request, res: Response) => {
 	try {
@@ -71,7 +82,6 @@ export const listContainersHandler = async (req: Request, res: Response) => {
 		});
 
 		const data = await response.json();
-
 		const containerData = data.map((container: any) => {
 			return {
 				id: container.Id,
@@ -81,6 +91,8 @@ export const listContainersHandler = async (req: Request, res: Response) => {
 				created: container.Created,
 			};
 		});
+		// console.log("data", containerData)
+		
 
 		//Format Data
 		res.json(containerData);
@@ -90,9 +102,55 @@ export const listContainersHandler = async (req: Request, res: Response) => {
 	}
 };
 
+export const listenConsumer = async (req: Request, res: Response) => {
+	const containerId = req.query.containerId as string;
+
+	try {
+		await consumer.connect()
+		await consumer.subscribe({ topic: containerId.toString(), fromBeginning: true })
+
+		await consumer.run({
+		eachMessage: async ({ topic, partition, message }) => {
+			console.log({
+			value: message!.value!.toString(),
+			})
+		},
+		})
+		res.json("done");
+
+	} catch (error: any) {
+		console.error("Error:", error);
+		res.status(500).json({ error: error.message });
+	}
+};
+
+
+ const produceCpuUsage =async  (containerId:any, cpu_usage:any) => {
+
+	try {
+		// console.log(cpu_usage);
+		
+		await producer.connect()
+		await producer.send({
+		  topic: "957960d65b3571d08fb3c5648fcb197fc70f8e7a6b1445fa7ae0f60c2c46fc29",
+		  messages: [
+			{ value: cpu_usage.toString() },
+		  ],
+		})
+		
+		await producer.disconnect()
+
+	} catch (error: any) {
+		console.error("Error:", error);
+	}
+};
+
+
 export const inspectContainer = async (req: Request, res: Response) => {
 	const containerId = req.query.containerId as string;
-	// containerId = "957960d65b3571d08fb3c5648fcb197fc70f8e7a6b1445fa7ae0f60c2c46fc29";
+	// containerId = ""de3308938a1b7b225a3665ba1d19faf17c184b73b320c2058eaacedd5e751c16"";
+	console.log(containerId)
+
 	try {
 		const dockerApiUrl = `http://localhost:8099/containers/${containerId}/json`;
 		const response = await fetch(dockerApiUrl, {
@@ -116,7 +174,7 @@ export const inspectContainer = async (req: Request, res: Response) => {
 			environment: data.Config.Env,
 		};
 
-		console.log(data);
+		// console.log(data);
 
 		//Format Data
 		res.json(output);
@@ -203,6 +261,9 @@ export const getContainerStatsHandler = async (req: Request, res: Response) => {
 			memArr.push(memory_usage);
 			cpuArr.push(cpu_usage);
 			timeArr.push(data.read);
+
+			produceCpuUsage(containerId,cpu_usage);
+
 
 			res.write(
 				JSON.stringify({

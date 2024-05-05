@@ -61,10 +61,10 @@ const TableOne = () => {
         },
       });
       const data = await response.json();
-      // console.log(data);
+      console.log(data);
       setSystemData(data);
     })();
-  });
+  },[]);
 
   useEffect(() => {
     (async () => {
@@ -75,7 +75,7 @@ const TableOne = () => {
         },
       });
       const data = await response.json();
-      console.log(data);
+      console.log("listContainers", response.body);
       setRunningContainers(data);
     })();
   }, []);
