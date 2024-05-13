@@ -8,3 +8,5 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 bin/kafka-server-start.sh config/server.properties
 bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:9092
 bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
+# harsh
+socat -d -d TCP-L:8099,fork UNIX:/home/harshshetye/.docker/desktop/docker.sock
