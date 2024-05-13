@@ -114,7 +114,7 @@ export const listenConsumer = async (req: Request, res: Response) => {
 		await consumer.run({
 		eachMessage: async ({ topic, partition, message }) => {
 			console.log({
-			value: message!.value!.toString(),
+			consumer_value: message!.value!.toString(),
 			})
 		},
 		})
@@ -458,3 +458,26 @@ export const getContainerAsTar = async (req: Request, res: Response) => {
 		res.status(500).json({ error: error.message });
 	}
 };
+
+
+export const stopContainer = async (req: Request, res: Response) => {
+	const containerId = req.query.containerId as string;
+	console.log("stoping container",containerId)
+	// containerId = "957960d65b3571d08fb3c5648fcb197fc70f8e7a6b1445fa7ae0f60c2c46fc29";
+	try {
+		const dockerApiUrl = `http://localhost:8099/containers/${containerId}/stop`;
+		const response = await fetch(dockerApiUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+			//return success message
+			const message = "Container stopped successfully";
+			res.json({ message });
+
+	} catch (error: any) {
+		console.error("Error:", error);
+		res.status(500).json({ error: error.message });
+	}
+}

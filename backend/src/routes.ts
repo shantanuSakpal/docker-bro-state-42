@@ -7,7 +7,8 @@ import {
 	inspectContainer,
 	getSystemInfo,
 	listenConsumer,
-	getContainerStatsOneShot
+	getContainerStatsOneShot,
+	stopContainer
 } from "./controllers/docker";
 
 export default async function routes(app: Application) {
@@ -28,4 +29,5 @@ export default async function routes(app: Application) {
 	app.get("/getContainerStats", getContainerStatsHandler);
 	app.get("/getContainerLogs", getContainerLogsTwo);
 	app.get("/getSystemInfo", getSystemInfo);
+	app.get("/stopContainer", stopContainer);
 }

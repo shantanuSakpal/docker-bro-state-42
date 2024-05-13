@@ -4,7 +4,7 @@ import CardDataStats from "../CardDataStats";
 import LineChart from "../Charts/NewLineChart";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { memoryUsage } from "process";
+import { cpuUsage, memoryUsage } from "process";
 
 const ECommerce: React.FC = () => {
   const currentPage = usePathname();
@@ -84,6 +84,15 @@ const ECommerce: React.FC = () => {
           memory_usage_bytes,
           memory_limit_bytes,
         });
+//if cpu usage is more than 0.1 then stop container
+console.log("cpu usage",parseFloat(cpu_usage))
+        if( parseFloat(cpu_usage)> 0.5){
+          stopContainer()
+        }
+        // console.log("time, ",dynamicData.timeStamp)
+        // console.log("cpu, ",dynamicData.cpu_usage)
+
+
 // console.log("mem, ",dynamicData.memory_usage)
         localStorage.setItem(
           "latestTime",
@@ -111,137 +120,47 @@ const ECommerce: React.FC = () => {
     return () => clearInterval(interval); // Clean up interval on component unmount
   }, []);
 
-  // const [timeArr, setTimeArr] = useState<string[]>([
-  //   '17:10:31',
-  //   '17:10:32',
-  //   '17:10:34',
-  //   '17:10:35',
-  //   '17:10:36',
-  //   '17:10:37',
-  //   '17:10:38',
-  //   '17:10:39',
-  //   '17:10:40',
-  //   '17:10:41',
-  //   '17:10:42',
-  //   '17:10:43',
-  //   '17:10:44',
-  //   '17:10:45',
-  //   '17:10:46',
-  //   '17:10:47',
-  //   '17:10:48',
-  //   '17:10:49',
-  //   '17:10:50',
-  //   '17:10:51',
-  //   '17:10:52',
-  //   '17:10:53',
-  //   '17:10:54',
-  //   '17:10:55',
-  //   '17:10:56',
-  //   '17:10:57',
-  //   '17:10:58',
-  //   '17:10:59',
-  //   '17:11:00',
-  //   '17:11:01',
-  //   '17:11:02',
-  //   '17:11:03',
-  //   '17:11:04',
-  //   '17:11:05',
-  //   '17:11:06',
-  //   '17:11:07',
-  //   '17:11:08',
-  //   '17:11:09',
-  //   '17:11:10',
-  //   '17:11:11',
-  //   '17:11:12',
-  //   '17:11:13',
-  //   '17:11:14',
-  //   '17:11:15',
-  //   '17:11:16',
-  //   '17:11:17',
-  //   '17:11:18',
-  //   '17:11:19',
-  //   '17:11:20',
-  //   '17:11:21',
-  //   '17:11:22',
-  //   '17:11:23',
-  //   '17:11:24',
-  //   '17:11:25',
-  //   '17:11:26',
-  //   '17:11:27',
-  //   '17:11:28',
-  //   '17:11:29',
-  //   '17:11:30',
-  //   '17:11:31',
-  //   '17:11:32',
-  //   '17:11:33',
-  //   '17:11:34',
-  //   '17:11:35',
-  //   '17:11:36',
-  //   '17:11:37',
-  //   '17:11:38',
-  //   '17:11:39',
-  //   '17:11:40',
-  //   '17:11:41',
-  //   '17:11:42',
-  //   '17:11:43',
-  //   '17:11:44',
-  //   '17:11:45',
-  //   '17:11:46',
-  //   '17:11:47',
-  //   '17:11:48',
-  //   '17:11:49',
-  //   '17:11:50',
-  //   '17:11:51',
-  //   '17:11:52',
-  //   '17:11:53',
-  //   '17:11:54',
-  //   '17:11:55',
-  //   '17:11:56',
-  //   '17:11:57',
-  //   '17:11:58',
-  //   '17:11:59',
-  //   '17:12:00',
-  //   '17:12:01',
-  //   '17:12:02',
-  //   '17:12:03',
-  //   '17:12:04',
-  //   '17:12:05',
-  //   '17:12:06',
-  //   '17:12:07',
-  //   '17:12:08',
-  //   '17:12:09',
-  //   '17:12:10',
-  //   '17:12:11',
-  // ])
 
-  // const [dataArr, setDataArr] = useState<number[]>([
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 20, 30, 25, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0, 0, 0, 0, 0,
-  //   0, 0, 0, 0
-  // ])
+
+  async function  stopContainer() {
+    //useinterval of 3 sec
+    setInterval(async () => {
+      console.log("stop container in 3 seconds")
+    const response = await fetch(`http://localhost:1337/stopContainer/?containerId=${containerId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      //go to home page
+      alert("Container stopped")
+      window.location.href = "http://localhost:3000/";
+    }, 5000);
+  }
 
   return (
     <>
       <div className="relative mt-4 flex flex-col">
-        <div>
+       <div className="flex flex-row justify-between mb-10">
+       <div>
           <h1 className="mb-2 text-2xl font-semibold">Container Stats</h1>
+        </div>
+        <div className="flex flex-row gap-3">
+        <div
+        onClick={() => stopContainer()}
+          className=" rounded bg-graydark px-5 py-2 cursor-pointer"
+        >
+          Stop Container
         </div>
         <Link
           href={`/logs/${containerId}`}
-          className="absolute -top-5 right-10 rounded bg-graydark px-5 py-2"
+          className=" rounded bg-graydark px-5 py-2"
         >
           Logs
         </Link>
+       </div>
+        </div>
         {/* Charts */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
           {/* CPU Used */}
