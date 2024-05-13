@@ -103,6 +103,8 @@ export const listContainersHandler = async (req: Request, res: Response) => {
 };
 
 export const listenConsumer = async (req: Request, res: Response) => {
+
+	//need the full id of the container
 	const containerId = req.query.containerId as string;
 
 	try {
@@ -128,11 +130,10 @@ export const listenConsumer = async (req: Request, res: Response) => {
  const produceCpuUsage =async  (containerId:any, cpu_usage:any) => {
 
 	try {
-		// console.log(cpu_usage);
 		
 		await producer.connect()
 		await producer.send({
-		  topic: "957960d65b3571d08fb3c5648fcb197fc70f8e7a6b1445fa7ae0f60c2c46fc29",
+		  topic: containerId.toString(),
 		  messages: [
 			{ value: cpu_usage.toString() },
 		  ],
@@ -205,6 +206,66 @@ export const inspectImage = async (req: Request, res: Response) => {
 		res.status(500).json({ error: error.message });
 	}
 };
+
+
+export const getContainerStatsOneShot = async (req: Request, res: Response) => {
+	const containerId = req.query.containerId as string;
+	try {
+		const dockerApiUrl = `http://localhost:8099/containers/${containerId}/stats?stream=false`;
+		const response = await fetch(dockerApiUrl, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		const timeArr = [];
+		const cpuArr = [];
+		const memArr = [];
+
+		const data = await response.json();
+		const cpu_delta =
+		data.cpu_stats.cpu_usage.total_usage - data.precpu_stats.cpu_usage.total_usage;
+	const temp = data.cpu_stats.system_cpu_usage - data.precpu_stats.system_cpu_usage;
+	const cpu_system_delta = !Number.isNaN(temp) ? temp : 0;
+	// console.log(cpu_delta, !Number.isNaN(temp));
+	let cpu_usage = (cpu_delta / cpu_system_delta) * data.cpu_stats.online_cpus * 100;
+
+	cpu_usage == Infinity ? (cpu_usage = 0) : cpu_usage;
+
+	const memory_usage = parseInt(
+		((data.memory_stats.usage / data.memory_stats.limit) * 100).toFixed(0)
+	);
+
+	const memory_usage_bytes = data.memory_stats.usage;
+	const memory_limit_bytes = data.memory_stats.limit;
+
+	const cpu_cores = data.cpu_stats.online_cpus;
+
+	memArr.push(memory_usage);
+	cpuArr.push(cpu_usage);
+	timeArr.push(data.read);
+
+	produceCpuUsage(containerId,cpu_usage);
+
+
+		const jsonData = {
+			timeStamp: data.read,
+			cpu_usage,
+			memory_usage,
+			memory_usage_bytes,
+			memory_limit_bytes,
+			cpu_cores,
+			average_cpu: (cpuArr.reduce((a, b) => a + b, 0) / cpuArr.length).toFixed(2),
+			average_memory: (memArr.reduce((a, b) => a + b, 0) / memArr.length).toFixed(2),
+		}
+		res.json(jsonData);
+	} catch (error: any) {
+		console.error("Error:", error);
+		res.status(500).json({ error: error.message });
+	}
+};
+
 
 export const getContainerStatsHandler = async (req: Request, res: Response) => {
 	const containerId = req.query.containerId as string;

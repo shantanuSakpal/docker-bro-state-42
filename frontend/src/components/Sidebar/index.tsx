@@ -69,7 +69,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         },
       });
       const data = await response.json();
-      console.log("containers", data);
       setRunningContainers(data);
     })();
   }, []);
@@ -82,7 +81,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         },
       });
       const data = await response.json();
-      console.log("containers", data);
   }
 
 

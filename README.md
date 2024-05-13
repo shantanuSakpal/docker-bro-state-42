@@ -2,6 +2,7 @@
 ## This is  a web app for monitoring docker containers 
 ### Made by the ultimate colab of BROgrammers and Random_State_42
 
+socat -d -d TCP-L:8099,fork UNIX:/var/run/docker.sock
 
 bin/zookeeper-server-start.sh config/zookeeper.properties
 bin/kafka-server-start.sh config/server.properties

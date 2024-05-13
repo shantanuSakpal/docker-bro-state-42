@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 
 export default function Home() {
   const genAI = new GoogleGenerativeAI(
-    "AIzaSyBpgcMCZS6Ro32ObfB4E9wUCEikOX75VtE",
+    "AIzaSyCdj7jH_Q7-IAbqbNhX3yjkAQi-fCgfkuc",
   );
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
   //make error type
@@ -53,12 +53,7 @@ export default function Home() {
 
   if (localStorage.getItem("errorList") == null) {
     errorList = [
-      {
-        id: 1,
-        title: "Internet connection error",
-        description:
-          "$ docker logs <container_id>\n    [2024-02-17T10:00:00Z] INFO: Starting container...\n    [2024-02-17T10:00:05Z] INFO: Container started successfully.\n    [2024-02-17T10:01:00Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:05Z] WARNING: DNS resolution failed. Trying again...\n    [2024-02-17T10:01:10Z] ERROR: Could not resolve host: example.com\n    [2024-02-17T10:01:15Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:20Z] WARNING: Retrying connection to example.com...\n    [2024-02-17T10:01:25Z] ERROR: Failed to connect to example.com port 80: Connection timed out\n    [2024-02-17T10:01:30Z] ERROR: Internet connection not available. Exiting container.\n    [2024-02-17T10:01:30Z] INFO: Container exiting...\n    ",
-      },
+     
       {
         id: 2,
         title: "Cpu usage high",
